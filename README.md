@@ -9,18 +9,9 @@ Ambiente de execucao do Kong API Gateway usando ferramenta docker-compose
 
 
 ## Ferramentas que serao provisionadas usando o docker-compose
-* Fluent-Bit
-* Kibana
-* ElasticSearch
-* Jaeger
 * Grafana
 * Prometheus
 * Prometheus Node Exporter
-
-### Arquivos de configuracao fluent-bit
-
-Na pasta [fluent-bit](compose/fluent-bit) contem os arquivos necessarios para configuracao da ferramenta, o docker-compose utilizara esta pasta para montar as configuracoes
-
 
 ### Arquivos de configuracao prometheus
 
