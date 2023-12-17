@@ -1,7 +1,7 @@
 version: "3.7"
 
 networks:
-  kong-fc:
+  kong-fiap:
     external: false
 
 volumes:
@@ -21,7 +21,7 @@ services:
       restart_policy:
         condition: any
     networks:
-      - kong-fc
+      - kong-fiap
     environment:
       - POSTGRES_USER=kong
       - POSTGRES_DB=kong
@@ -38,12 +38,12 @@ services:
   ### armazenamento das configuracoes do Kong
   ###
   kong-migration-bootstrap:
-    image: claudioed/kong-fc
+    image: kong:latest
     deploy:
       restart_policy:
         condition: on-failure
     networks:
-      - kong-fc
+      - kong-fiap
     depends_on:
       - kong-database
     environment:
@@ -59,9 +59,9 @@ services:
   ### armazenamento das configuracoes do Kong
   ###
   kong-migration-up:
-    image: claudioed/kong-fc
+    image: kong:latest
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: on-failure
@@ -80,9 +80,9 @@ services:
   ###
   kong:
     container_name: kong
-    image: claudioed/kong-fc
+    image: kong:latest
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: any
@@ -120,7 +120,7 @@ services:
   players:
     image: claudioed/players
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: on-failure
@@ -132,7 +132,7 @@ services:
   championships:
     image: claudioed/championships
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: on-failure
@@ -144,7 +144,7 @@ services:
   matches:
     image: claudioed/matches
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: on-failure
@@ -156,7 +156,7 @@ services:
   bets:
     image: claudioed/bets
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: on-failure
@@ -167,39 +167,14 @@ services:
       - CHAMPIONSHIP_SVC=http://championships:9999/api/championships/144954fe-b6c3-4a51-80d3-92911a06265c
       - PLAYER_SVC=http://players:9999/api/players/144954fe-b6c3-4a51-80d3-92911a06265c
 
-  postgres:
-    image: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:legacy
-    environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-
   ###
   ### Konga
   ### Administracao via interface grafica do Kong API Gateway
   ###
   konga:
-    image: pantsel/konga
+    image: claudioed/konga
     networks:
-      - kong-fc
+      - kong-fiap
     deploy:
       restart_policy:
         condition: on-failure
@@ -217,7 +192,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     networks:
-      - kong-fc
+      - kong-fiap
     ports:
       - "9090:9090"
     volumes:
@@ -231,7 +206,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     networks:
-      - kong-fc
+      - kong-fiap
     ports:
       - "3000:3000"
     depends_on:
@@ -243,7 +218,7 @@ services:
   node_exporter:
     image: prom/node-exporter:latest
     networks:
-      - kong-fc
+      - kong-fiap
     ports:
       - "9100:9100"
     container_name: node_exporter
