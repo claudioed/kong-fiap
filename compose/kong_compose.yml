@@ -38,7 +38,7 @@ services:
   ### armazenamento das configuracoes do Kong
   ###
   kong-migration-bootstrap:
-    image: kong:latest
+    image: kong:3.2.2
     deploy:
       restart_policy:
         condition: on-failure
@@ -59,7 +59,7 @@ services:
   ### armazenamento das configuracoes do Kong
   ###
   kong-migration-up:
-    image: kong:latest
+    image: kong:3.2.2
     networks:
       - kong-fiap
     deploy:
@@ -80,7 +80,7 @@ services:
   ###
   kong:
     container_name: kong
-    image: kong:latest
+    image: kong:3.2.2
     networks:
       - kong-fiap
     deploy:
